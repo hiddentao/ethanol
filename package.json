@@ -1,7 +1,7 @@
 {
   "name": "ethanol",
   "version": "1.0.0",
-  "description": "Cross-platform IDE for Ethereum blockchain contracts",
+  "description": "Cross-platform Solidity IDE for Ethereum",
   "main": "main.js",
   "scripts": {
     "start": "gulp"
