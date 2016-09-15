@@ -4,7 +4,7 @@ const electron = require('electron'),
   log = require('./logger').create('menu');
   
   
-exports.setup = (mainWindow) {
+exports.setup = function(mainWindow) {
   var template = [{
       label: "Application",
       submenu: [

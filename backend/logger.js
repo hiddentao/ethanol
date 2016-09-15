@@ -1,5 +1,5 @@
 const log4js = require('log4js'),
-  Settings = require('settings');
+  Settings = require('./settings');
 
 var setupDone = false;
 

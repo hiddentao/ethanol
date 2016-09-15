@@ -1,3 +1,1 @@
-const Settings = require('./settings');
-
-window.appMode = Settings.appMode;
+window.appConfig = global.appConfig;

@@ -2,21 +2,20 @@ const _ = require('lodash'),
   electron = require('electron'),
   app = electron.app,
   path = require('path'),
-  packageJson = require('../package.json'),
-  log = require('./logger').creater('Settings');
+  packageJson = require('../package.json');
 
 
-let DEFAULT_CONFIG = {
+let CONFIG = {
   mode: 'development',
   datadir: path.join(app.getPath('userData'), 'blockchain'),
 };
 try {
-  _.extend(DEFAULT_CONFIG, require('../config.json'));
+  _.extend(CONFIG, require('../config.json'));
 } catch (err) {}
 
 
-const MODE_IS_PRODUCTION = (MODE==='production');
-const MODE_IS_DEVELOPMENT = (MODE==='development');
+const MODE_IS_PRODUCTION = (CONFIG.mode==='production');
+const MODE_IS_DEVELOPMENT = (CONFIG.mode==='development');
 
 
 const argv = require('yargs')
@@ -24,7 +23,7 @@ const argv = require('yargs')
   .option({
     mode: {
       demand: false,
-      default: DEFAULT_CONFIG.mode,
+      default: CONFIG.mode,
       describe: 'Runtime mode: development, production',
       requiresArg: true,
       nargs: 1,
@@ -60,12 +59,12 @@ const argv = require('yargs')
     datadir: {
       demand: false,
       requiresArg: true,
-      default: DEFAULT_CONFIG.datadir,
+      default: CONFIG.datadir,
       nargs: 1,
       describe: 'Default blockchain data folder',
       type: 'string',
       group: 'Ethanol options:',
-    }
+    },
     '': {
       describe: 'To pass options to the underlying node (e.g. Geth) use the --node- prefix, e.g. --node-datadir',
       group: 'Node options:',
@@ -97,6 +96,11 @@ if (argv.datadir) {
 
 
 class Settings {
+  constructor () {
+    // the only globals permitted (for use in preload scripts)
+    global.appConfig = this.appConfig;
+  }
+  
   get blockchainDir() {
     return argv.datadir;
   }
@@ -121,8 +125,8 @@ class Settings {
     return 'Ethanol';
   }
   
-  get appMode() {
-    return MODE;
+  get appConfig() {
+    return CONFIG;
   }
   
   get inProductionMode() {

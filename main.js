@@ -2,7 +2,9 @@
 
 const electron = require('electron'),
   app = electron.app,
-  log = require('./backend/logger').createe('main');
+  BrowserWindow = electron.BrowserWindow,
+  Settings = require('./backend/settings'),
+  log = require('./backend/logger').create('main');
   
   
 var mainWindow;
@@ -11,21 +13,26 @@ var mainWindow;
 function createMainWindow () {
   log.info('Creating main window ...');
 
+  // url
+  const url = Settings.inProductionMode
+    ? 'file://' + __dirname + '/index.html'
+    : 'http://localhost:3456';
+  
   // Create the browser window.
   mainWindow = new BrowserWindow({
     title: Settings.appName,
     show: true,
-    width: 1024,
-    height: 768,
+    width: 1100,
+    height: 720,
     center: true,
     resizable: true,
     // icon: global.icon,
-    titleBarStyle: 'hidden-inset', //hidden-inset: more space
+    // titleBarStyle: 'hidden-inset', //hidden-inset: more space
     // backgroundColor: '#000',
     acceptFirstMouse: true,
     darkTheme: true,
     webPreferences: {
-        preload: __dirname + '/windowPreload.js',
+        preload: __dirname + '/backend/windowPreload.js',
         nodeIntegration: false,
         webaudio: true,
         webgl: false,
@@ -33,17 +40,16 @@ function createMainWindow () {
         textAreasAreResizable: true,
     },
   });
-
-  const url = Settings.inProductionMode
-    ? 'file://' + __dirname + '/index.html'
-    : 'http://localhost:3456';
-
+  
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
     log.info('Window closed');
 
-    delete mainWindow;
+    mainWindow = null;
   });
+
+  // load URL
+  mainWindow.loadURL(url);
 
   require('./backend/menu').setup(mainWindow);
 }

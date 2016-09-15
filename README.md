@@ -2,6 +2,24 @@
 
 **WIP**
 
+## Development
+
+Requirements:
+  * [Node.js 6+](http://nodejs.org)
+  
+Once Node is installed, install the dependencies:
+
+```shell
+npm install
+```
+
+To run:
+
+```shell
+gulp
+```
+
+
 ## Contributions
 
 Contributions welcome - see [CONTRIBUTING.md](CONTRIBUTING.md)
