@@ -1,7 +1,9 @@
 import React from 'react';
+import { BaseComponent } from '../helpers/components';
+import { connectRedux } from '../helpers/decorators';
 
 
-export default class HomePage extends React.Component {
+class HomePage extends BaseComponent {
   render () {
     return (
       <div id="home page">
@@ -11,3 +13,7 @@ export default class HomePage extends React.Component {
     );
   }
 }
+
+
+
+module.exports = connectRedux()(HomePage);

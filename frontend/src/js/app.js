@@ -5,47 +5,24 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
 import { create as createStore } from './data/store';
-
-import Layout from './ui/layout';
+import { connectRedux } from './ui/helpers/decorators';
 import HomePage from './ui/pages/home';
 
 
 
-var App = 
+var App = connectRedux()(
   React.createClass({
-    childContextTypes: {
-      router: React.PropTypes.object,
-      routeParams: React.PropTypes.object,
-      location: React.PropTypes.object,
+    render: function() {
+      return this.props.children;
     },
-
-    getChildContext: function() {
-      return {
-        routeParams: this.props.params,
-        location: this.props.location,
-      };
-    },
-
-    render: function () {
-      return (
-        <Layout {...this.props}>
-          {this.props.children}
-        </Layout>
-      );
+    componentDidMount: function () {
+      this.props.dispatcher.init();
     },
   })
-;
+);
 
 
 const store = createStore();
-
-
-const Routes = (
-  <Route component={App}>
-    <IndexRoute component={HomePage} />
-    <Route path="*" component={HomePage} />
-  </Route>
-);
 
 
 class RootComponent extends React.Component {
@@ -53,7 +30,10 @@ class RootComponent extends React.Component {
     return (
       <Provider store={store}>
         <Router history={browserHistory}>
-          {Routes}
+          <Route component={App}>
+            <IndexRoute component={HomePage} />
+            <Route path="*" component={HomePage} />
+          </Route>
         </Router>
       </Provider>
     );

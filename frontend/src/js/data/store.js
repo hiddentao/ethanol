@@ -6,7 +6,7 @@ import * as reducers from './reducers';
 
 // const logger = createLogger();
 
-const combinedReducer = combineReducers(reducers);
+let combinedReducer = combineReducers(reducers);
 
 const middleware = [
   thunkMiddleware, 
@@ -15,8 +15,22 @@ const middleware = [
 
 
 export function create() {
-  return compose(
+  let store = compose(
     applyMiddleware(...middleware)
   )(createStore)(combinedReducer)
+  
+  // React hot reload
+  if (module.onReload) {
+    module.onReload(() => {
+      store.replaceReducer(combineReducers(require('./reducers')));
+      // return true to indicate that this module is accepted and
+      // there is no need to reload its parent modules
+      return true;
+    });
+  }
+
+  return store;
 };
+
+
 
