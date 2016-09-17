@@ -22,7 +22,7 @@ function buildAction(type, payload = {}) {
 /**
  * Action dispatcher.
  */
-export class Dispatcher {
+class Dispatcher {
   constructor (dispatch, getState) {
     this._dispatch = dispatch;
     this._getState = getState;
@@ -38,3 +38,4 @@ export class Dispatcher {
 }
 
 
+exports.Dispatcher = Dispatcher;

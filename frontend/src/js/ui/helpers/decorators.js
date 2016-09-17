@@ -5,7 +5,7 @@ import { Dispatcher } from '../../data/actions';
 
 
 /**
- * Connect a component to the Redux store and action creators.
+ * Connect a component to the Redux store and dispatcher.
  */
 export function connectRedux() {
   return function decorator(Component) {
@@ -32,8 +32,10 @@ export function connectRedux() {
   }
 }
 
-
-export function routing() {
+/**
+ * Connect a component to router.
+ */
+export function connectRouter() {
   return function decorator(Component) {
     return React.createClass({
       contextTypes: {

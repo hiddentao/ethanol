@@ -57,6 +57,7 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
+    "bluebird": "^3.4.6",
     "lodash": "^4.15.0",
     "log4js": "^0.6.38",
     "yargs": "^5.0.0"
