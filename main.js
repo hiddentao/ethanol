@@ -4,6 +4,7 @@ const electron = require('electron'),
   app = electron.app,
   BrowserWindow = electron.BrowserWindow,
   Settings = require('./backend/settings'),
+  Windows = require('./backend/windows'),
   log = require('./backend/logger').create('main');
   
   
@@ -19,26 +20,8 @@ function createMainWindow () {
     : 'http://localhost:3456';
   
   // Create the browser window.
-  mainWindow = new BrowserWindow({
-    title: Settings.appName,
-    show: true,
-    width: 1100,
-    height: 720,
-    center: true,
-    resizable: true,
-    // icon: global.icon,
-    // titleBarStyle: 'hidden-inset', //hidden-inset: more space
-    // backgroundColor: '#000',
-    acceptFirstMouse: true,
-    darkTheme: true,
-    webPreferences: {
-        preload: __dirname + '/backend/windowPreload.js',
-        nodeIntegration: false,
-        webaudio: true,
-        webgl: false,
-        webSecurity: false, // necessary to make routing work on file:// protocol
-        textAreasAreResizable: true,
-    },
+  mainWindow = Windows.create('main', {
+    isMain: true
   });
   
   // Emitted when the window is closed.
@@ -49,7 +32,7 @@ function createMainWindow () {
   });
 
   // load URL
-  mainWindow.loadURL(url);
+  mainWindow.load(url);
 
   require('./backend/menu').setup(mainWindow);
 }
