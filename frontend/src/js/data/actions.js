@@ -29,7 +29,7 @@ function buildAction(type, payload = {}) {
  */
 class Dispatcher {
   constructor () {
-    ipc.on('ui-task-update', this.receiveIpc.bind(this));
+    ipc.on('ui-task-notify', this._receiveTaskNotificationIpc.bind(this));
   }
 
   setup (store) {
@@ -39,18 +39,18 @@ class Dispatcher {
   
   init () {
     this._action(TYPES.INIT, 'in_progress');
-    this._sendIpc('ensureClient');    
+    this._sendTaskIpc('ensureClient');    
   }
   
   _action (type, payload) {
     this._dispatch(buildAction(type, payload));
   }
   
-  _sendIpc(task, params) {
+  _sendTaskIpc(task, params) {
     ipc.send('backend-task', task, params);
   }
   
-  _receiveTaskUpdateIpc(e, task, state, data) {
+  _receiveTaskNotificationIpc(e, task, state, data) {
     switch (task) {
       case 'ensureClientStatus':
         this._action(TYPES.CLIENT_BINARY, {
