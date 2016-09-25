@@ -41,7 +41,9 @@
     "gulp-stylus": "^2.5.0",
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.7",
+    "immutable-state-machine": "^1.0.1",
     "livereactload": "^3.0.0",
+    "logarama": "^1.1.2",
     "nib": "^1.1.2",
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
@@ -58,6 +60,7 @@
   },
   "dependencies": {
     "bluebird": "^3.4.6",
+    "ethereum-client-binaries": "^1.0.0",
     "lodash": "^4.15.0",
     "log4js": "^0.6.38",
     "yargs": "^5.0.0"

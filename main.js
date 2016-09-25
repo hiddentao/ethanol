@@ -5,6 +5,7 @@ const electron = require('electron'),
   BrowserWindow = electron.BrowserWindow,
   Settings = require('./backend/settings'),
   Windows = require('./backend/windows'),
+  IpcManager = require('./backend/ipc'),
   log = require('./backend/logger').create('main');
   
   
@@ -66,6 +67,8 @@ app.on('activate', function () {
   // dock icon is clicked and there are no other windows open.
   if (!mainWindow) {
     createMainWindow();
+  } else {
+    mainWindow.show();
   }
 });
 

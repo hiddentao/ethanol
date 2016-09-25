@@ -16,14 +16,8 @@ export function connectRedux() {
         };
       },
       function mapDispatchToProps(dispatch) {
-        let dispatcher;
-        
-        dispatch((dispatch, getState) => {
-          dispatcher = new Dispatcher(dispatch, getState);
-        });
-        
         return {
-          dispatcher: dispatcher,
+          dispatcher: Dispatcher,
         };
       },
       null,

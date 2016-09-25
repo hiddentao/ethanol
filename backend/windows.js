@@ -77,7 +77,7 @@ class Windows {
       return wnd.config.isMain && wnd.isShown;
     });
     
-    if (!anyOpen) {
+    if (!anyOpen && process.platform !== 'darwin') {
       log.info('All primary windows closed/invisible, so quitting app...');
       
       app.quit();
@@ -142,7 +142,7 @@ class Window extends EventEmitter {
       this._isDestroyed = true;
       this._isContentReady = false;
       
-      this.emit('destroyed');
+      this.emit('closed');
     });
     
     this._window.on('show', (e) => {
