@@ -5,7 +5,7 @@ const _ = require('lodash'),
   app = electron.app,
   EthereumClientBinaries = require('ethereum-client-binaries'),
   clientBinariesConfig = require('./config/clientBinaries.json'),
-  EventEmitter = require('eventemitter3')
+  EventEmitter = require('eventemitter3'),
   log = require('./logger').create('ClientNode');
 
 

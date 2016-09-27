@@ -1,5 +1,6 @@
+_ = require 'lodash'
 browserify = require 'browserify'
-
+browserifyBuiltIns = require 'browserify/lib/builtins'
 source = require 'vinyl-source-stream2'
 uglify = require 'gulp-uglify'
 watchify = require 'watchify'
@@ -7,6 +8,8 @@ livereactload = require 'livereactload'
 gulp = require 'gulp'
 gutil = require 'gulp-util'
 gulpIf = require 'gulp-if'
+
+
 
 
 
@@ -19,12 +22,17 @@ module.exports = (params) ->
     debug: !options.minifiedBuild
     cache: {}
     packageCache: {}
-    plugin: if options.watchForChanges then [watchify, livereactload] else []
+    plugin: if options.watchForChanges then [watchify] else []
+    commondir: false
+    builtins: _.pick(browserifyBuiltIns, '_process')
+    insertGlobals: false
   )
 
   # processing method
   _build = ->
     bundle = b.bundle()
+    
+    b.exclude('electron')
 
     if options.dontExitOnError
       bundle = bundle.on 'error', (err) ->

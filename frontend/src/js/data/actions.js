@@ -32,7 +32,7 @@ class Dispatcher {
     ipc.on('ui-task-notify', this._receiveTaskNotificationIpc.bind(this));
   }
 
-  setup (store) {
+  setStore (store) {
     this._dispatch = store.dispatch;
     this._getState = store.getState;
   }
@@ -73,4 +73,4 @@ class Dispatcher {
 }
 
 
-exports.Dispatcher = Dispatcher;
+exports.Dispatcher = new Dispatcher();

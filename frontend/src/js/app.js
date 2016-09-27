@@ -11,7 +11,7 @@ import { Dispatcher } from './data/actions';
 const store = createStore(),
   Routes = createRoutes(store);
   
-Dispatcher.setup(store);
+Dispatcher.setStore(store);
 
 
 class RootComponent extends React.Component {

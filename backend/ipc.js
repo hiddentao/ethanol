@@ -12,7 +12,7 @@ const _ = require('lodash'),
 
 class IpcManager {
   constructor () {
-    ipc.on('backend-task', this._receiveIpc().bind(this));    
+    ipc.on('backend-task', this._receiveIpc.bind(this));    
   }
   
   _notifyUiTask (task, state, data) {
@@ -43,4 +43,4 @@ class IpcManager {
 }
 
 
-module.exports = ipcManager = new IpcManager();
+module.exports = new IpcManager();
