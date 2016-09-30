@@ -3,7 +3,8 @@ import { BaseComponent } from '../helpers/components';
 import { connectRedux } from '../helpers/decorators';
 
 
-class EditorPage extends BaseComponent {
+@connectRedux()
+export default class EditorPage extends BaseComponent {
   render () {
     const data = this.props.data;
     
@@ -24,7 +25,4 @@ class EditorPage extends BaseComponent {
     );
   }
 }
-
-
-module.exports = connectRedux()(EditorPage);
 

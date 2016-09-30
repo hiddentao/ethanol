@@ -2,12 +2,16 @@ import Q from 'bluebird';
 import React from 'react';
 import { BaseComponent } from '../helpers/components';
 import { connectRedux, connectRouter } from '../helpers/decorators';
+import { css } from 'aphrodisiac';
+import styles from '../styles/pages';
 
 
-class InitPage extends BaseComponent {
+@connectRedux()
+@connectRouter()
+export default class InitPage extends BaseComponent {
   render () {
     return (
-      <div id="init page">
+      <div className={css(styles.page, styles.init)}>
         "initializing..."
       </div>
     );
@@ -26,7 +30,7 @@ class InitPage extends BaseComponent {
 
     // once initializion is successful go to editor page
     if ('success' === initState) {
-      this.props.router.push('/editor');
+      // this.props.router.push('/editor');
     } 
     // if not yet initialized then do so
     else if ('ready' === initState) {
@@ -35,6 +39,4 @@ class InitPage extends BaseComponent {
   }
 }
 
-
-module.exports = connectRedux()(connectRouter()(InitPage));
 

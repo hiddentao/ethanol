@@ -4,7 +4,9 @@
     "es2015"
   ],
   "plugins": [
-    "external-helpers"
+    "external-helpers",
+    "transform-react-display-name",
+    "transform-decorators-legacy"
   ],
   "env": {
     "development": {
