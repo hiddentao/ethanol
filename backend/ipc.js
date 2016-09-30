@@ -15,25 +15,23 @@ class IpcManager {
     ipc.on('backend-task', this._receiveIpc.bind(this));    
   }
   
-  _notifyUiTask (task, state, data) {
-    ipc.send('ui-task-notify', task, state, data);
-  }
-  
   _receiveIpc (e, task, params) {
     switch (task) {
       case 'ensureClient':
+        log.info('Ensuring client binary exists ...');
+        
         ClientNode.ensureBinary()
           .on('scanning', () => {
-            this._notifyUiTask('ensureClient', 'in_progress', 'Scanning for client binary');
+            e.sender.send('ensureClient', 'in_progress', 'Scanning for client binary');
           })
           .on('downloading', () => {
-            this._notifyUiTask('ensureClient', 'in_progress', 'Downloading client binary');
+            e.sender.send('ensureClient', 'in_progress', 'Downloading client binary');
           })
           .on('found', () => {
-            this._notifyUiTask('ensureClient', 'success', 'Client binary found');
+            e.sender.send('ensureClient', 'success', 'Client binary found');
           })
           .on('error', (err) => {
-            this._notifyUiTask('ensureClient', 'error', err.message);
+            e.sender.send('ensureClient', 'error', err.message);
           });
         break;
       default:

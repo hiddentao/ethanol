@@ -4,7 +4,7 @@ import Q from 'bluebird';
 
 const TYPES = exports.TYPES = {
   INIT: 'INIT',
-  CLIENT_BINARY: 'CLIENT_BINARY',
+  ENSURE_CLIENT: 'ENSURE_CLIENT',
 };
 
 
@@ -52,8 +52,8 @@ class Dispatcher {
   
   _receiveTaskNotificationIpc(e, task, state, data) {
     switch (task) {
-      case 'ensureClientStatus':
-        this._action(TYPES.CLIENT_BINARY, {
+      case 'ensureClient':
+        this._action(TYPES.ENSURE_CLIENT, {
           state: state,
           data: data,
         });    

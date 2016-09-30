@@ -101,6 +101,11 @@ class Settings {
     global.appConfig = this.appConfig;
   }
   
+  get userDataDir() {
+  // Application Support/Ethanol
+  return app.getPath('userData');
+}
+
   get blockchainDir() {
     return argv.datadir;
   }

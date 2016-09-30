@@ -20,7 +20,7 @@ export function app(state = InitialState.app, action) {
         initialization: updateMachine(state.initialization, action),
       });        
       break;
-    case TYPES.CLIENT_BINARY:
+    case TYPES.ENSURE_CLIENT:
       Object.assign(state, {
         clientBinaryProvisioning: updateMachine(state.clientBinaryProvisioning, action),
       });        

@@ -109,12 +109,12 @@ class Window extends EventEmitter {
       acceptFirstMouse: true,
       darkTheme: true,
       webPreferences: {
-          preload: __dirname + '/windowPreload.js',
-          nodeIntegration: false,
-          webaudio: true,
-          webgl: false,
-          webSecurity: false, // necessary to make routing work on file:// protocol
-          textAreasAreResizable: true,
+        preload: __dirname + '/windowPreload.js',
+        nodeIntegration: true,
+        webaudio: true,
+        webgl: false,
+        webSecurity: false, // necessary to make routing work on file:// protocol
+        textAreasAreResizable: true,
       },
     };
     
