@@ -51,6 +51,8 @@ class Dispatcher {
   }
   
   _receiveTaskNotificationIpc(e, task, state, data) {
+    console.debug(`Recv IPC: task:${task} state:${state} data:${typeof data}`);
+    
     switch (task) {
       case 'ensureClient':
         this._action(TYPES.ENSURE_CLIENT, {

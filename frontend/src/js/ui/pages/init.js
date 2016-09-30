@@ -8,18 +8,30 @@ class InitPage extends BaseComponent {
   render () {
     return (
       <div id="init page">
-        "asdfasdfsd"
+        "initializing..."
       </div>
     );
   }
+  
+  componentDidUpdate () {
+    this._initializeOrRedirect();
+  }
 
   componentDidMount () {
-    this.props.dispatcher.init();
-    
-    Q.delay(5000)
-    .then(() => {
+    this._initializeOrRedirect();
+  }
+  
+  _initializeOrRedirect () {
+    const initState = this.props.data.app.get('initialization').getState();
+
+    // once initializion is successful go to editor page
+    if ('success' === initState) {
       this.props.router.push('/editor');
-    });
+    } 
+    // if not yet initialized then do so
+    else if ('ready' === initState) {
+      this.props.dispatcher.init();
+    }
   }
 }
 

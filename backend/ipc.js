@@ -22,22 +22,27 @@ class IpcManager {
         
         ClientNode.ensureBinary()
           .on('scanning', () => {
-            e.sender.send('ensureClient', 'in_progress', 'Scanning for client binary');
+            this._notifyUi(e, 'ensureClient', 'in_progress', 'Scanning for client binary');
           })
           .on('downloading', () => {
-            e.sender.send('ensureClient', 'in_progress', 'Downloading client binary');
+            this._notifyUi(e, 'ensureClient', 'in_progress', 'Downloading client binary');
           })
           .on('found', () => {
-            e.sender.send('ensureClient', 'success', 'Client binary found');
+            this._notifyUi(e, 'ensureClient', 'success', 'Client binary found');
           })
           .on('error', (err) => {
-            e.sender.send('ensureClient', 'error', err.message);
+            this._notifyUi(e, 'ensureClient', 'error', err.message);
           });
         break;
       default:
         log.error(`Unrecognized task: ${task}`)
     }
   }
+  
+  
+  _notifyUi (e, task, status, data) {
+    e.sender.send('ui-task-notify', task, status, data);
+  } 
 }
 
 

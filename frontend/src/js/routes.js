@@ -7,13 +7,17 @@ import InitPage from './ui/pages/init';
 
 export function create(store) {
   const ensureInitialized = function(nextState, replace) {
-    if (!store.getState().app.initialized) {
+    const initialization = store.getState().app.get('initialization');
+    
+    if ('success' !== initialization.getState()) {
       replace('/');
     }
   }
   
   const ensureNotInitialized = function(nextState, replace) {
-    if (store.getState().app.initialized) {
+    const initialization = store.getState().app.get('initialization');
+
+    if ('success' === initialization.getState()) {
       replace('/editor');
     }
   }

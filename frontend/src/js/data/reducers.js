@@ -1,29 +1,27 @@
+import Immutable from 'immutable';
 import { TYPES } from './actions';
-import { 
-  createStandard as createStandardMachine, 
-  update as updateMachine 
-} from '../utils/stateMachines';
+import { createStandardMachine } from '../utils/stateMachines';
 
 
 const InitialState = {
-  app: {
+  app: Immutable.Map({
     initialization: createStandardMachine(),
-    clientBinaryProvisioning: createStandardMachine(),
-  }
+    clientBinaryProvisioning: createStandardMachine(),    
+  }),
 }
 
 
-export function app(state = InitialState.app, action) {
+export function app(state = InitialState.app, action) {  
   switch (action.type) {
     case TYPES.INIT:
-      Object.assign(state, {
-        initialization: updateMachine(state.initialization, action),
-      });        
+      state = state.set('initialization', 
+        state.get('initialization').update(action)
+      );
       break;
     case TYPES.ENSURE_CLIENT:
-      Object.assign(state, {
-        clientBinaryProvisioning: updateMachine(state.clientBinaryProvisioning, action),
-      });        
+      state = state.set('clientBinaryProvisioning', 
+        state.get('clientBinaryProvisioning').update(action)
+      );
       break;    
   }
   

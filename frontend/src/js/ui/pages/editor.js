@@ -19,7 +19,7 @@ class EditorPage extends BaseComponent {
   _buildEditor() {
     return (
       <div>
-        <p>Home page oh yeha baby!</p>
+        <p>Ready!</p>
       </div>
     );
   }

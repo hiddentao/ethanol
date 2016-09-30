@@ -1,12 +1,28 @@
 import Machine from 'immutable-state-machine';
 
 
-export function createStandard () {
-  return new Machine([
+class FluxActionMachine extends Machine {
+  constructor (cfg) {
+    super(cfg, FluxActionMachine)
+  }
+  
+  update(fluxAction) {
+    let payload = fluxAction.payload || fluxAction,
+      state = payload.state || payload,
+      data = payload.data || null;
+      
+    return this.goto(state, data);
+  }
+}
+
+
+
+export function createStandardMachine () {
+  return new FluxActionMachine([
     {
       id: 'ready',
       from: [],
-      to: ['in_progress'],
+      to: ['in_progress', 'success', 'error'],
     },
     {
       id: 'in_progress',
@@ -15,22 +31,14 @@ export function createStandard () {
     },
     {
       id: 'success',
-      from: ['in_progress'],
+      from: ['ready', 'in_progress'],
       to: ['ready'],
     },
     {
       id: 'error',
-      from: ['in_progress'],
+      from: ['ready', 'in_progress'],
       to: ['ready'],
     },
   ]);
 }
 
-
-export function update(machine, fluxAction) {
-  let payload = fluxAction.payload || fluxAction,
-    state = payload.state || payload,
-    data = payload.data || null;
-    
-  return machine.goto(state, data);
-}
