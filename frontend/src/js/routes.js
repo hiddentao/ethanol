@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, IndexRoute, Route, browserHistory } from 'react-router';
+import { Router, IndexRoute, Route, hashHistory } from 'react-router';
 
 import EditorPage from './ui/pages/editor';
 import InitPage from './ui/pages/init';
@@ -23,7 +23,7 @@ export function create(store) {
   }
 
   return (
-    <Router history={browserHistory}>
+    <Router history={hashHistory}>
       <Route>
         <IndexRoute component={InitPage} onEnter={ensureNotInitialized} />
         <Route path="/editor" component={EditorPage} onEnter={ensureInitialized}/>
