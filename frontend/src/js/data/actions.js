@@ -31,12 +31,12 @@ class Dispatcher {
   constructor () {
     ipc.on('ui-task-notify', this._receiveTaskNotificationIpc.bind(this));
   }
-
+  
   setStore (store) {
     this._dispatch = store.dispatch;
     this._getState = store.getState;
   }
-  
+
   init () {
     this._action(TYPES.INIT, 'in_progress');
     this._sendTaskIpc('ensureClient');    

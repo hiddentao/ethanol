@@ -19,7 +19,7 @@ export function create() {
     applyMiddleware(...middleware)
   )(createStore)(combinedReducer)
   
-  // React hot reload
+  // Livereactload
   if (module.onReload) {
     module.onReload(() => {
       store.replaceReducer(combineReducers(require('./reducers')));

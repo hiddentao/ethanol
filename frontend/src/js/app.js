@@ -14,18 +14,9 @@ const store = createStore(),
 Dispatcher.setStore(store);
 
 
-class RootComponent extends React.Component {
-  render () {
-    return (
-      <Provider store={store}>{Routes}</Provider>
-    );
-  }
-}
-
-
 ReactDOM.render(
-  <RootComponent />,
-  document.getElementById('react-root'),
+  <Provider store={store}>{Routes}</Provider>,
+  document.getElementById('react-root')
 );
 
 

@@ -12,7 +12,7 @@ export default class InitPage extends BaseComponent {
   render () {
     return (
       <div className={css(styles.page, styles.init)}>
-        "initializing..."
+        <p>asdfasdf</p>
       </div>
     );
   }
@@ -30,7 +30,7 @@ export default class InitPage extends BaseComponent {
 
     // once initializion is successful go to editor page
     if ('success' === initState) {
-      // this.props.router.push('/editor');
+      this.props.router.push('/editor');
     } 
     // if not yet initialized then do so
     else if ('ready' === initState) {
