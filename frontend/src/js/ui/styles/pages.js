@@ -7,6 +7,18 @@ export default StyleSheet.create({
     color: COLORS.white,
   },
   init: {
-    height: '100vh',    
+    height: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'no-wrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '& h2': {
+      fontSize: '200%',
+      margin: '0.5em',
+    },
+    '& p': {
+      fontStyle: 'italic',
+    },
   }
 });

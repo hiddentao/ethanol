@@ -9,9 +9,23 @@ import styles from '../styles/pages';
 @connectRouter()
 export default class InitPage extends React.Component {
   render () {
+    const appState = this.props.data.app,
+      initialization = appState.get('initialization'),
+      clientBinaryProvisioning = appState.get('clientBinaryProvisioning');
+      
+    const initMsg = ('in_progress' === initialization.getState()) 
+      ? 'Initializing' 
+      : 'Initialized!';
+    
+    let progressMsg = 'Please wait...';
+    if ('in_progress' === clientBinaryProvisioning.getState()) {
+      progressMsg = clientBinaryProvisioning.getData();
+    }
+      
     return (
       <div className={css(styles.page, styles.init)}>
-        <p>asdfasdf</p>
+        <h2>{initMsg}</h2>
+        <p>{progressMsg}</p>
       </div>
     );
   }
@@ -29,7 +43,7 @@ export default class InitPage extends React.Component {
 
     // once initializion is successful go to editor page
     if ('success' === initState) {
-      this.props.router.push('/editor');
+      // this.props.router.push('/editor');
     } 
     // if not yet initialized then do so
     else if ('ready' === initState) {
