@@ -1,10 +1,9 @@
 import React from 'react';
-import { BaseComponent } from '../helpers/components';
 import { connectRedux } from '../helpers/decorators';
 
 
 @connectRedux()
-export default class EditorPage extends BaseComponent {
+export default class EditorPage extends React.Component {
   render () {
     const data = this.props.data;
     

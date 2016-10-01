@@ -1,6 +1,5 @@
 import Q from 'bluebird';
 import React from 'react';
-import { BaseComponent } from '../helpers/components';
 import { connectRedux, connectRouter } from '../helpers/decorators';
 import { css } from 'aphrodisiac';
 import styles from '../styles/pages';
@@ -8,7 +7,7 @@ import styles from '../styles/pages';
 
 @connectRedux()
 @connectRouter()
-export default class InitPage extends BaseComponent {
+export default class InitPage extends React.Component {
   render () {
     return (
       <div className={css(styles.page, styles.init)}>

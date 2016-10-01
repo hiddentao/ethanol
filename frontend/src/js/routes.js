@@ -23,13 +23,11 @@ export function create(store) {
   }
 
   return (
-    <Router history={hashHistory}>
-      <Route>
-        <IndexRoute component={InitPage} onEnter={ensureNotInitialized} />
-        <Route path="/editor" component={EditorPage} onEnter={ensureInitialized}/>
-        <Route path="*" component={InitPage} onEnter={ensureNotInitialized}/>
-      </Route>    
-    </Router>
+    <Route>
+      <IndexRoute component={InitPage} onEnter={ensureNotInitialized} />
+      <Route path="/editor" component={EditorPage} onEnter={ensureInitialized}/>
+      <Route path="*" component={InitPage} onEnter={ensureNotInitialized}/>
+    </Route>    
   );
 }
 

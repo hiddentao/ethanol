@@ -22,7 +22,7 @@ module.exports = (params) ->
     debug: !options.minifiedBuild
     cache: {}
     packageCache: {}
-    plugin: if options.watchForChanges then [watchify] else []
+    plugin: if options.watchForChanges then [watchify, livereactload] else []
     commondir: false
     builtins: _.pick(browserifyBuiltIns, '_process')
     insertGlobals: false
