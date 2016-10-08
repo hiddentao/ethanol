@@ -10,7 +10,7 @@ export default class EditorPage extends React.Component {
     const content = this._buildEditor();
       
     return (
-      <div id="home page">
+      <div id="editor page">
         {content}
       </div>
     );
