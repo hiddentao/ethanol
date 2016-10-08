@@ -11,21 +11,33 @@ export default class InitPage extends React.Component {
   render () {
     const appState = this.props.data.app,
       initialization = appState.get('initialization'),
-      backendInitialization = appState.get('backendInitialization');
+      backendInitialization = appState.get('backendInitialization'),
+      web3Initialization = appState.get('web3Initialization');
       
     const initMsg = ('in_progress' === initialization.getState()) 
-      ? 'Initializing' 
+      ? 'Initializing...' 
       : 'Initialized!';
     
-    let progressMsg = 'Please wait...';
+    let progressMsgs = [];
+    
     if ('in_progress' === backendInitialization.getState()) {
-      progressMsg = backendInitialization.getData();
+      progressMsgs.push(backendInitialization.getData() || 'Initializing backend');
     }
       
+    if ('in_progress' === web3Initialization.getState()) {
+      progressMsgs.push(web3Initialization.getData() || 'Initializing web3');
+    }
+    
+    const progressMsg = progressMsgs.length ? (progressMsgs.map(
+      (msg, idx) => <li key={idx}>{msg}</li>
+    )) : (
+      <li>Please wait...</li>
+    );
+
     return (
       <div className={css(styles.page, styles.init)}>
         <h2>{initMsg}</h2>
-        <p>{progressMsg}</p>
+        <ul>{progressMsg}</ul>
       </div>
     );
   }
@@ -43,7 +55,7 @@ export default class InitPage extends React.Component {
 
     // once initializion is successful go to editor page
     if ('success' === initState) {
-      // this.props.router.push('/editor');
+      this.props.router.push('/editor');
     } 
     // if not yet initialized then do so
     else if ('ready' === initState) {

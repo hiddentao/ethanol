@@ -4,13 +4,11 @@ import createLogger from 'redux-logger';
 
 import * as reducers from './reducers';
 
-// const logger = createLogger();
-
 let combinedReducer = combineReducers(reducers);
 
 const middleware = [
   thunkMiddleware, 
-  // logger, 
+  createLogger(), 
 ];
 
 

@@ -1,10 +1,15 @@
 import { ipcRenderer as ipc } from 'electron';
 import Q from 'bluebird';
+import Web3 from 'web3';
+import EthereumBlocks from 'ethereum-blocks';
 
 
 const TYPES = exports.TYPES = {
   INIT: 'INIT',
   BACKEND_INIT: 'BACKEND_INIT',
+  WEB3_INIT: 'WEB3_INIT',
+  BLOCK: 'BLOCK',
+  BLOCK_ERROR: 'BLOCK_ERROR',
 };
 
 
@@ -20,7 +25,6 @@ function buildAction(type, payload = {}) {
     payload: payload,
   };
 };
-
 
 
 
@@ -42,6 +46,55 @@ class Dispatcher {
     this._sendTaskIpc('init');    
   }
   
+  _connectWeb3 () {
+    this._action(TYPES.WEB3_INIT, 'in_progress');
+    
+    let connected = false;
+    
+    const blocks = new EthereumBlocks({ 
+      web3: new Web3(new Web3.providers.HttpProvider('http://localhost:38545'))
+    });
+    
+    // blocks.logger = console;
+
+    blocks.registerHandler('default', this._blockHandler.bind(this));
+
+    blocks.start().catch((err) => {
+      this._blockHandler('error', null, err);
+    });
+  }
+
+  _blockHandler (eventType, blockId, data) {
+    const connected = 
+      ('success' === this._getState().app.get('web3Initialization').getState());
+    
+    switch (eventType) {
+      case 'block':
+        if (!connected) {
+          this._action(TYPES.WEB3_INIT, 'success');
+          this._action(TYPES.INIT, 'success');
+        }
+        
+        this._action(TYPES.BLOCK, data);
+        break;
+      case 'error':
+        if (!connected) {
+          this._action(TYPES.WEB3_INIT, {
+            state: 'error',
+            data: data,
+          });
+          
+          this._action(TYPES.INIT, {
+            state: 'error',
+            data: 'Web3 initialization failed',
+          });
+        } else {
+          this._action(TYPES.BLOCK_ERROR, data);
+        }
+        break;
+    }    
+  }
+
   _action (type, payload) {
     this._dispatch(buildAction(type, payload));
   }
@@ -60,10 +113,16 @@ class Dispatcher {
           data: data,
         });    
         
-        if ('success' === state || 'error' === state) {
-          this._action(TYPES.INIT, {
-            state: state,
-          });
+        switch (state) {
+          case 'error':
+            this._action(TYPES.INIT, {
+              state: 'error',
+              data: 'Backend initialization failed',
+            });
+            break;
+          case 'success':
+            this._connectWeb3();
+            break;
         }
         
         break;

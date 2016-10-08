@@ -28,6 +28,12 @@ class ClientNode {
   startup (ev) {
     ev = ev || new EventEmitter();
     
+    if (this.isRunning) {
+      ev.emit('started');
+      
+      return Q.resolve();
+    }
+    
     return this.ensureBinary(ev)
       .then(() => {
         ev.emit('starting');
