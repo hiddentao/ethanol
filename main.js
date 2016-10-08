@@ -4,6 +4,7 @@ const electron = require('electron'),
   app = electron.app,
   BrowserWindow = electron.BrowserWindow,
   Settings = require('./backend/settings'),
+  ClientNode = require('./backend/clientNode'),
   Windows = require('./backend/windows'),
   IpcManager = require('./backend/ipc'),
   log = require('./backend/logger').create('main');
@@ -60,6 +61,18 @@ app.on('window-all-closed', function () {
   }
 });
 
+// Before quit
+app.on('before-quit', function(e) {
+  if (ClientNode.isRunning) {
+    e.preventDefault();
+    
+    ClientNode.stop().finally(() => {
+      app.quit();
+    });
+  }
+});
+
+// activate
 app.on('activate', function () {
   log.info('App activated');
   

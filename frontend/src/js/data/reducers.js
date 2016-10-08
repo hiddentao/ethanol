@@ -6,7 +6,7 @@ import { createStandardMachine } from '../utils/stateMachines';
 const InitialState = {
   app: Immutable.Map({
     initialization: createStandardMachine(),
-    clientBinaryProvisioning: createStandardMachine(),    
+    backendInitialization: createStandardMachine(),    
   }),
 }
 
@@ -18,9 +18,9 @@ export function app(state = InitialState.app, action) {
         state.get('initialization').update(action)
       );
       break;
-    case TYPES.ENSURE_CLIENT:
-      state = state.set('clientBinaryProvisioning', 
-        state.get('clientBinaryProvisioning').update(action)
+    case TYPES.BACKEND_INIT:
+      state = state.set('backendInitialization', 
+        state.get('backendInitialization').update(action)
       );
       break;    
   }

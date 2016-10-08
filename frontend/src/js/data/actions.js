@@ -4,7 +4,7 @@ import Q from 'bluebird';
 
 const TYPES = exports.TYPES = {
   INIT: 'INIT',
-  ENSURE_CLIENT: 'ENSURE_CLIENT',
+  BACKEND_INIT: 'BACKEND_INIT',
 };
 
 
@@ -39,7 +39,7 @@ class Dispatcher {
 
   init () {
     this._action(TYPES.INIT, 'in_progress');
-    this._sendTaskIpc('ensureClient');    
+    this._sendTaskIpc('init');    
   }
   
   _action (type, payload) {
@@ -54,8 +54,8 @@ class Dispatcher {
     console.debug(`Recv IPC: task:${task} state:${state} data:${typeof data}`);
     
     switch (task) {
-      case 'ensureClient':
-        this._action(TYPES.ENSURE_CLIENT, {
+      case 'init':
+        this._action(TYPES.BACKEND_INIT, {
           state: state,
           data: data,
         });    
@@ -69,7 +69,7 @@ class Dispatcher {
         break;
 
       default:
-        throw new Error('unrecognized task', task);
+        throw new Error('Unrecognized task', task);
     }
   }
 }

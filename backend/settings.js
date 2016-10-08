@@ -65,6 +65,14 @@ const argv = require('yargs')
       type: 'string',
       group: 'Ethanol options:',
     },
+    nodelogging: {
+      demand: false,
+      requiresArg: false,
+      nargs: 0,
+      describe: 'Show client node logging',
+      type: 'boolean',
+      group: 'Ethanol options:',      
+    },
     '': {
       describe: 'To pass options to the underlying node (e.g. Geth) use the --node- prefix, e.g. --node-datadir',
       group: 'Node options:',
@@ -112,6 +120,10 @@ class Settings {
   
   get logLevel () {
     return argv.loglevel;
+  }
+  
+  get enableNodeLogging () {
+    return !!argv.nodelogging;
   }
   
   get nodeOptions () {

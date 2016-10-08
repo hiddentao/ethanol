@@ -11,15 +11,15 @@ export default class InitPage extends React.Component {
   render () {
     const appState = this.props.data.app,
       initialization = appState.get('initialization'),
-      clientBinaryProvisioning = appState.get('clientBinaryProvisioning');
+      backendInitialization = appState.get('backendInitialization');
       
     const initMsg = ('in_progress' === initialization.getState()) 
       ? 'Initializing' 
       : 'Initialized!';
     
     let progressMsg = 'Please wait...';
-    if ('in_progress' === clientBinaryProvisioning.getState()) {
-      progressMsg = clientBinaryProvisioning.getData();
+    if ('in_progress' === backendInitialization.getState()) {
+      progressMsg = backendInitialization.getData();
     }
       
     return (
