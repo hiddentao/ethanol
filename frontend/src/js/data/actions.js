@@ -8,6 +8,7 @@ const TYPES = exports.TYPES = {
   INIT: 'INIT',
   BACKEND_INIT: 'BACKEND_INIT',
   WEB3_INIT: 'WEB3_INIT',
+  ACCOUNTS: 'ACCOUNTS',
   BLOCK: 'BLOCK',
   BLOCK_ERROR: 'BLOCK_ERROR',
 };
@@ -42,19 +43,26 @@ class Dispatcher {
   }
 
   init () {
-    this._action(TYPES.INIT, 'in_progress');
+    this._stateAction(TYPES.INIT, 'in_progress');
     this._sendTaskIpc('init');    
   }
   
   _connectWeb3 () {
-    this._action(TYPES.WEB3_INIT, 'in_progress');
+    this._stateAction(TYPES.WEB3_INIT, 'in_progress', 'Initializing web3');
     
     let connected = false;
     
-    const blocks = new EthereumBlocks({ 
-      web3: new Web3(new Web3.providers.HttpProvider('http://localhost:38545'))
-    });
+    const web3 = window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:38545'));
     
+    this._stateAction(TYPES.WEB3_INIT, 'in_progress', 'Start polling');
+    
+    this._poll(web3);
+    
+    this._stateAction(TYPES.WEB3_INIT, 'in_progress', 'Fetching blocks');
+
+    const blocks = new EthereumBlocks({ 
+      web3: web3
+    });
     // blocks.logger = console;
 
     blocks.registerHandler('default', this._blockHandler.bind(this));
@@ -62,6 +70,8 @@ class Dispatcher {
     blocks.start().catch((err) => {
       this._blockHandler('error', null, err);
     });
+    
+    this._stateAction(TYPES.INIT, 'success');
   }
 
   _blockHandler (eventType, blockId, data) {
@@ -71,34 +81,39 @@ class Dispatcher {
     switch (eventType) {
       case 'block':
         if (!connected) {
-          this._action(TYPES.WEB3_INIT, 'success');
-          this._action(TYPES.INIT, 'success');
+          this._stateAction(TYPES.WEB3_INIT, 'success');
         }
         
-        this._action(TYPES.BLOCK, data);
+        this._normalAction(TYPES.BLOCK, data);
         break;
       case 'error':
         if (!connected) {
-          this._action(TYPES.WEB3_INIT, {
-            state: 'error',
-            data: data,
-          });
-          
-          this._action(TYPES.INIT, {
-            state: 'error',
-            data: 'Web3 initialization failed',
-          });
+          this._stateAction(TYPES.WEB3_INIT, 'error', data);
+          this._stateAction(TYPES.INIT, 'error', 'Web3 initialization failed');
         } else {
-          this._action(TYPES.BLOCK_ERROR, data);
+          this._normalAction(TYPES.BLOCK_ERROR, data);
         }
         break;
     }    
   }
+  
+  _poll (web3) {
+    this._normalAction(TYPES.ACCOUNTS, web3.personal.listAccounts);
 
-  _action (type, payload) {
+    setTimeout(() => this._poll(web3), 10000); // repeat after 10 seconds
+  }
+
+  _normalAction (type, payload) {
     this._dispatch(buildAction(type, payload));
   }
   
+  _stateAction (type, state, data) {
+    this._dispatch(buildAction(type, {
+      state: state,
+      data: data,
+    }));
+  }
+
   _sendTaskIpc(task, params) {
     ipc.send('backend-task', task, params);
   }
@@ -108,17 +123,11 @@ class Dispatcher {
     
     switch (task) {
       case 'init':
-        this._action(TYPES.BACKEND_INIT, {
-          state: state,
-          data: data,
-        });    
+        this._stateAction(TYPES.BACKEND_INIT, state, data);
         
         switch (state) {
           case 'error':
-            this._action(TYPES.INIT, {
-              state: 'error',
-              data: 'Backend initialization failed',
-            });
+            this._stateAction(TYPES.INIT, 'error', 'Backend initialization failed');
             break;
           case 'success':
             this._connectWeb3();

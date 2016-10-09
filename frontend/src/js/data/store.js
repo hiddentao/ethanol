@@ -8,7 +8,7 @@ let combinedReducer = combineReducers(reducers);
 
 const middleware = [
   thunkMiddleware, 
-  createLogger(), 
+  // createLogger(), 
 ];
 
 

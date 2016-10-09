@@ -12,8 +12,9 @@ const InitialState = {
   executor: Immutable.Map({
     autoCompile: false,
   }),
-  blocks: Immutable.Map({
-    chain: Immutable.List(),
+  chaindata: Immutable.Map({
+    accounts: Immutable.List(),
+    blocks: Immutable.List(),
     error: null,
   }),
 }
@@ -43,11 +44,14 @@ export function app(state = InitialState.app, action) {
 
 
 
-export function blocks(state = InitialState.blocks, action) {  
+export function chaindata(state = InitialState.chaindata, action) {  
   switch (action.type) {
+    case TYPES.ACCOUNTS:
+      state = state.set('accounts', action.payload);
+      break;
     case TYPES.BLOCK:
-      state = state.set('chain', 
-        state.get('chain').push(action.payload)
+      state = state.set('blocks', 
+        state.get('blocks').push(action.payload)
       );
       break;
     case TYPES.BLOCK_ERROR:

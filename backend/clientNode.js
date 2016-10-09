@@ -17,7 +17,7 @@ const _ = require('lodash'),
 
 class ClientNode {
   get isRunning () {
-    return this._inst && this._inst.running;
+    return this._inst && this._inst.isRunning;
   }
   
   /**
