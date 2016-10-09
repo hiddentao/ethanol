@@ -64,11 +64,17 @@ app.on('window-all-closed', function () {
 // Before quit
 app.on('before-quit', function(e) {
   if (ClientNode.isRunning) {
-    e.preventDefault();
-    
-    ClientNode.stop().finally(() => {
-      app.quit();
-    });
+    try {
+      e.preventDefault();
+      
+      ClientNode.shutdown().finally(() => {
+        app.quit();
+      });      
+    } catch (err) {
+      log.error('before-quit hook error'. err);
+      
+      process.exit();
+    }
   }
 });
 
