@@ -7,7 +7,7 @@ const InitialState = {
   app: Immutable.Map({
     initialization: createStandardMachine(),
     backendInitialization: createStandardMachine(),    
-    web3Initialization: createStandardMachine(),
+    web3: null,
   }),
   executor: Immutable.Map({
     autoCompile: false,
@@ -32,10 +32,8 @@ export function app(state = InitialState.app, action) {
         state.get('backendInitialization').update(action)
       );
       break;    
-    case TYPES.WEB3_INIT:
-      state = state.set('web3Initialization', 
-        state.get('web3Initialization').update(action)
-      );
+    case TYPES.WEB3:
+      state = state.set('web3', action.payload);
       break;    
   }
   

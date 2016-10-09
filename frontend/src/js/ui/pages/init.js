@@ -10,34 +10,21 @@ import styles from '../styles/pages';
 export default class InitPage extends React.Component {
   render () {
     const appState = this.props.data.app,
-      initialization = appState.get('initialization'),
-      backendInitialization = appState.get('backendInitialization'),
-      web3Initialization = appState.get('web3Initialization');
+      initialization = appState.get('initialization');
       
     const initMsg = ('in_progress' === initialization.getState()) 
       ? 'Initializing...' 
       : 'Initialized!';
     
-    let progressMsgs = [];
-    
-    if ('in_progress' === backendInitialization.getState()) {
-      progressMsgs.push(backendInitialization.getData() || 'Initializing backend');
-    }
-      
-    if ('in_progress' === web3Initialization.getState()) {
-      progressMsgs.push(web3Initialization.getData() || 'Initializing web3');
-    }
-    
-    const progressMsg = progressMsgs.length ? (progressMsgs.map(
-      (msg, idx) => <li key={idx}>{msg}</li>
-    )) : (
-      <li>Please wait...</li>
-    );
+    const progressMsg = ('in_progress' === initialization.getState())
+      ? initialization.getData()
+      : 'Please wait'
+    ;
 
     return (
       <div className={css(styles.page, styles.init)}>
         <h2>{initMsg}</h2>
-        <ul>{progressMsg}</ul>
+        <p>{progressMsg}</p>
       </div>
     );
   }

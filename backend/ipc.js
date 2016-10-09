@@ -19,7 +19,7 @@ class IpcManager {
   _receiveIpcFromUi (e, task, params) {
     switch (task) {
       case 'init':
-        log.info('Ensuring client binary exists ...');
+        log.info('Initialize backend ...');
         
         const ev = new EventEmitter();
         

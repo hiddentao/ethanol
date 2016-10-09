@@ -12,14 +12,12 @@ export function connectRedux() {
     return connect(
       function mapStateToProps(state) {
         return {
-          data: state
-        };
-      },
-      function mapDispatchToProps(dispatch) {
-        return {
+          data: state,
+          web3: state.app.get('web3'),
           dispatcher: Dispatcher,
         };
       },
+      null,
       null,
       { withRef: true }
     )(Component);

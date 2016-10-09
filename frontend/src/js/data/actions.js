@@ -1,4 +1,5 @@
 import { ipcRenderer as ipc } from 'electron';
+import _ from 'lodash';
 import Q from 'bluebird';
 import Web3 from 'web3';
 import EthereumBlocks from 'ethereum-blocks';
@@ -7,7 +8,8 @@ import EthereumBlocks from 'ethereum-blocks';
 const TYPES = exports.TYPES = {
   INIT: 'INIT',
   BACKEND_INIT: 'BACKEND_INIT',
-  WEB3_INIT: 'WEB3_INIT',
+  WEB3: 'WEB3',
+  WEB3_POLL: 'WEB3_POLL',
   ACCOUNTS: 'ACCOUNTS',
   BLOCK: 'BLOCK',
   BLOCK_ERROR: 'BLOCK_ERROR',
@@ -48,17 +50,19 @@ class Dispatcher {
   }
   
   _connectWeb3 () {
-    this._stateAction(TYPES.WEB3_INIT, 'in_progress', 'Initializing web3');
+    this._stateAction(TYPES.INIT, 'in_progress', 'Initializing web3');
     
     let connected = false;
     
     const web3 = window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:38545'));
     
-    this._stateAction(TYPES.WEB3_INIT, 'in_progress', 'Start polling');
+    this._action(TYPES.WEB3, web3);
+
+    this._stateAction(TYPES.INIT, 'in_progress', 'Start polling');
     
-    this._poll(web3);
+    this._startPolling(web3);
     
-    this._stateAction(TYPES.WEB3_INIT, 'in_progress', 'Fetching blocks');
+    this._stateAction(TYPES.INIT, 'in_progress', 'Fetching blocks');
 
     const blocks = new EthereumBlocks({ 
       web3: web3
@@ -67,47 +71,69 @@ class Dispatcher {
 
     blocks.registerHandler('default', this._blockHandler.bind(this));
 
-    blocks.start().catch((err) => {
-      this._blockHandler('error', null, err);
-    });
-    
-    this._stateAction(TYPES.INIT, 'success');
+    blocks.start()
+      .then(() => {
+        this._stateAction(TYPES.INIT, 'success');
+      })
+      .catch((err) => {
+        this._stateAction(TYPES.INIT, 'error', 'Block fetching failed');
+      });    
   }
 
   _blockHandler (eventType, blockId, data) {
-    const connected = 
-      ('success' === this._getState().app.get('web3Initialization').getState());
-    
     switch (eventType) {
       case 'block':
-        if (!connected) {
-          this._stateAction(TYPES.WEB3_INIT, 'success');
-        }
-        
-        this._normalAction(TYPES.BLOCK, data);
+        this._action(TYPES.BLOCK, data);
         break;
       case 'error':
-        if (!connected) {
-          this._stateAction(TYPES.WEB3_INIT, 'error', data);
-          this._stateAction(TYPES.INIT, 'error', 'Web3 initialization failed');
-        } else {
-          this._normalAction(TYPES.BLOCK_ERROR, data);
-        }
+        this._action(TYPES.BLOCK_ERROR, data);
         break;
     }    
   }
   
-  _poll (web3) {
-    this._normalAction(TYPES.ACCOUNTS, web3.personal.listAccounts);
+  _startPolling (web3) {
+    web3.getBalancePromise = Q.promisify(web3.eth.getBalance);
 
-    setTimeout(() => this._poll(web3), 10000); // repeat after 10 seconds
+    this._stateAction(TYPES.WEB3_POLL, 'ready');
+    
+    const __poll = () => {
+      this._stateAction(TYPES.WEB3_POLL, 'in_progress', 'Starting');
+      
+      const accounts = web3.personal.listAccounts;
+
+      this._stateAction(TYPES.WEB3_POLL, 'in_progress', 'Fetching balances');
+      
+      // web3.getBalancePromise(accounts[0]).then(web3.toDecimal).then(console.log);
+      
+      Q.map(accounts, (acc) => web3.getBalancePromise(acc))
+        .then((balances) => {
+          this._action(TYPES.ACCOUNTS, _.zipObject(
+            accounts, balances.map(web3.toDecimal)
+          ));
+        })
+        .then(() => {
+          this._stateAction(TYPES.WEB3_POLL, 'success');
+        })
+        .catch((err) => {
+          this._stateAction(TYPES.WEB3_POLL, 'error', err);
+        })
+        .finally(() => {
+          setTimeout(__poll, 2000); // repeat regularly
+        });
+    };
+    
+    __poll();
   }
 
-  _normalAction (type, payload) {
+  _action (type, payload) {
     this._dispatch(buildAction(type, payload));
   }
   
   _stateAction (type, state, data) {
+    if (typeof state !== 'string') {
+      throw new Error('State must be a string');
+    }
+    
     this._dispatch(buildAction(type, {
       state: state,
       data: data,
@@ -126,6 +152,9 @@ class Dispatcher {
         this._stateAction(TYPES.BACKEND_INIT, state, data);
         
         switch (state) {
+          case 'in_progress':
+            this._stateAction(TYPES.INIT, 'in_progress', data);
+            break;          
           case 'error':
             this._stateAction(TYPES.INIT, 'error', 'Backend initialization failed');
             break;

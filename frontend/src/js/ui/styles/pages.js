@@ -17,7 +17,7 @@ export default StyleSheet.create({
       fontSize: '200%',
       margin: '0.5em',
     },
-    '& li': {
+    '& p': {
       fontStyle: 'italic',
     },
   }
