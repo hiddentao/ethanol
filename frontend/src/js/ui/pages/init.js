@@ -55,7 +55,7 @@ export default class InitPage extends React.Component {
 
     // once initializion is successful go to editor page
     if ('success' === initState) {
-      this.props.router.push('/editor');
+      this.props.router.push('/main');
     } 
     // if not yet initialized then do so
     else if ('ready' === initState) {

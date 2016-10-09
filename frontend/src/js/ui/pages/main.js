@@ -1,5 +1,7 @@
 import React from 'react';
+import Accounts from '../components/accounts';
 import { connectRedux } from '../helpers/decorators';
+
 
 
 @connectRedux()
@@ -7,19 +9,14 @@ export default class EditorPage extends React.Component {
   render () {
     const data = this.props.data;
     
-    const content = this._buildEditor();
-      
-    return (
-      <div id="editor page">
-        {content}
-      </div>
-    );
-  }
-  
-  _buildEditor() {
     return (
       <div>
-        <p>Ready!</p>
+        <div>editor</div>
+        <div>execution</div>
+        <div>
+          <h2>Accounts</h2>
+          <Accounts />
+        </div>
       </div>
     );
   }
