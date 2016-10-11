@@ -5,4 +5,6 @@ exports.COLORS = {
   c4: "rgba(134, 97, 193, 1)",
   c5: "rgba(75, 82, 103, 1)",
   white: "#fff", 
-}
+  black: "#000",
+  light_gray: '#999',
+};

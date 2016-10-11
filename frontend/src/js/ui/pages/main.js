@@ -1,7 +1,7 @@
 import React from 'react';
-import { css } from 'aphrodisiac';
-import Accounts from '../components/accounts';
+import AccountList from '../components/accountList';
 import { connectRedux } from '../helpers/decorators';
+import { css } from 'aphrodisiac';
 import styles from '../styles/pages';
 
 
@@ -9,7 +9,8 @@ import styles from '../styles/pages';
 @connectRedux()
 export default class EditorPage extends React.Component {
   render () {
-    const data = this.props.data;
+    const data = this.props.data,
+      accounts = data.chaindata.get('accounts');
     
     return (
       <div className={css(styles.main)}>
@@ -17,7 +18,7 @@ export default class EditorPage extends React.Component {
         <div>execution</div>
         <div>
           <h2>Accounts</h2>
-          <Accounts />
+          <AccountList accounts={accounts} />
         </div>
       </div>
     );

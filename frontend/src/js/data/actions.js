@@ -104,13 +104,18 @@ class Dispatcher {
       const accounts = web3.personal.listAccounts;
 
       this._stateAction(TYPES.WEB3_POLL, 'in_progress', 'Fetching balances');
-      
-      // web3.getBalancePromise(accounts[0]).then(web3.toDecimal).then(console.log);
-      
+            
       Q.map(accounts, (acc) => web3.getBalancePromise(acc))
         .then((balances) => {
           this._action(TYPES.ACCOUNTS, _.zipObject(
-            accounts, balances.map(web3.toDecimal)
+            accounts, _.map(balances, (b) => {
+              const bValue = web3.toDecimal(b);
+              
+              return {
+                wei: bValue,
+                ether: web3.fromWei(bValue, 'ether'),
+              };
+            })
           ));
         })
         .then(() => {
