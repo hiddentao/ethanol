@@ -74,12 +74,13 @@ class Dispatcher {
     blocks.registerHandler('default', this._blockHandler.bind(this));
 
     blocks.start()
-      .then(() => {
-        this._stateAction(TYPES.INIT, 'success');
-      })
+      /* catch first since we don't want to catch errors from success _stateAction call */
       .catch((err) => {
         this._stateAction(TYPES.INIT, 'error', 'Block fetching failed');
-      });    
+      })
+      .then(() => {
+        this._stateAction(TYPES.INIT, 'success');
+      });
   }
 
   _blockHandler (eventType, blockId, data) {
