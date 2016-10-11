@@ -20,5 +20,13 @@ export default StyleSheet.create({
     '& p': {
       fontStyle: 'italic',
     },
-  }
+  },
+  main: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'no-wrap',
+    '& > div': {
+      width: '30%'
+    },
+  },
 });

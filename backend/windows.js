@@ -58,7 +58,7 @@ class Windows {
    */
   get(id) {
     return _.find(this._windows, (w) => {
-      return w.type === type && (owner ? w.owner === owner : true);
+      return w.id === id;
     });
   }
   
@@ -246,6 +246,7 @@ class Window extends EventEmitter {
   
   
   openDevTools () {
+    console.log(Object.keys(this._window));
     this._window.openDevTools();
   }
 }

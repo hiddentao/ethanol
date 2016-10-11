@@ -1,6 +1,8 @@
 import React from 'react';
+import { css } from 'aphrodisiac';
 import Accounts from '../components/accounts';
 import { connectRedux } from '../helpers/decorators';
+import styles from '../styles/pages';
 
 
 
@@ -10,7 +12,7 @@ export default class EditorPage extends React.Component {
     const data = this.props.data;
     
     return (
-      <div>
+      <div className={css(styles.main)}>
         <div>editor</div>
         <div>execution</div>
         <div>

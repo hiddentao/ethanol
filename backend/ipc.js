@@ -6,6 +6,8 @@ const _ = require('lodash'),
   ipc = electron.ipcMain,
   EventEmitter = require('eventemitter3'),
   ClientNode = require('./clientNode'),
+  CONSTANTS = require('../common/constants'),
+  Windows = require('./windows'),
   log = require('./logger').create('IpcManager');
 
 
@@ -13,34 +15,34 @@ const _ = require('lodash'),
 
 class IpcManager {
   constructor () {
-    ipc.on('backend-task', this._receiveIpcFromUi.bind(this));
+    ipc.on(CONSTANTS.IPC.BACKEND_TASK, this._receiveIpcFromUi.bind(this));
   }
   
   _receiveIpcFromUi (e, task, params) {
     switch (task) {
-      case 'init':
+      case CONSTANTS.IPC.INIT:
         log.info('Initialize backend ...');
         
         const ev = new EventEmitter();
         
         ev
           .on('scanning', () => {
-            this._notifyUi(e, 'init', 'in_progress', 'Scanning for client binary');
+            this._notifyUi(CONSTANTS.IPC.INIT, 'in_progress', 'Scanning for client binary');
           })
           .on('downloading', () => {
-            this._notifyUi(e, 'init', 'in_progress', 'Downloading client binary');
+            this._notifyUi(CONSTANTS.IPC.INIT, 'in_progress', 'Downloading client binary');
           })
           .on('found', () => {
-            this._notifyUi(e, 'init', 'in_progress', 'Client binary found');
+            this._notifyUi(CONSTANTS.IPC.INIT, 'in_progress', 'Client binary found');
           })
           .on('starting', () => {
-            this._notifyUi(e, 'init', 'in_progress', 'Starting client');
+            this._notifyUi(CONSTANTS.IPC.INIT, 'in_progress', 'Starting client');
           })
           .on('started', () => {
-            this._notifyUi(e, 'init', 'success', 'Client started');
+            this._notifyUi(CONSTANTS.IPC.INIT, 'success', 'Client started');
           })
           .on('error', (err) => {
-            this._notifyUi(e, 'init', 'error', err.message);
+            this._notifyUi(CONSTANTS.IPC.INIT, 'error', err.message);
           });        
 
         ClientNode.startup(ev);
@@ -51,8 +53,8 @@ class IpcManager {
   }
   
   
-  _notifyUi (e, task, status, data) {
-    e.sender.send('ui-task-notify', task, status, data);
+  _notifyUi (task, status, data) {
+    Windows.get('main').send(CONSTANTS.IPC.UI_TASK_NOTIFY, task, status, data);
   } 
 }
 

@@ -3,6 +3,7 @@ import _ from 'lodash';
 import Q from 'bluebird';
 import Web3 from 'web3';
 import EthereumBlocks from 'ethereum-blocks';
+import CONSTANTS from '../../../../common/constants';
 
 
 const TYPES = exports.TYPES = {
@@ -36,7 +37,8 @@ function buildAction(type, payload = {}) {
  */
 class Dispatcher {
   constructor () {
-    ipc.on('ui-task-notify', this._receiveTaskNotificationIpc.bind(this));
+    ipc.on(CONSTANTS.IPC.UI_TASK_NOTIFY, this._receiveTaskNotificationIpc.bind(this));
+    ipc.on(CONSTANTS.IPC.UI_RELOAD, () => location.reload());
   }
   
   setStore (store) {
@@ -46,7 +48,7 @@ class Dispatcher {
 
   init () {
     this._stateAction(TYPES.INIT, 'in_progress');
-    this._sendTaskIpc('init');    
+    this._sendTaskIpc(CONSTANTS.IPC.INIT);    
   }
   
   _connectWeb3 () {
@@ -141,14 +143,14 @@ class Dispatcher {
   }
 
   _sendTaskIpc(task, params) {
-    ipc.send('backend-task', task, params);
+    ipc.send(CONSTANTS.IPC.BACKEND_TASK, task, params);
   }
   
   _receiveTaskNotificationIpc(e, task, state, data) {
     console.debug(`Recv IPC: task:${task} state:${state} data:${typeof data}`);
     
     switch (task) {
-      case 'init':
+      case CONSTANTS.IPC.INIT:
         this._stateAction(TYPES.BACKEND_INIT, state, data);
         
         switch (state) {
