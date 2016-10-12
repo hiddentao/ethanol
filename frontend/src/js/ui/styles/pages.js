@@ -1,12 +1,16 @@
 import { StyleSheet } from 'aphrodisiac';
-import { COLORS } from './vars';
+import { COLORS, FONTS } from './vars';
+
 
 export default StyleSheet.create({
   page: {
-    backgroundColor: COLORS.c5,
-    color: COLORS.white,
+    backgroundColor: COLORS.white,
+    color: COLORS.black,
+    fontFamily: FONTS.body,
   },
   init: {
+    backgroundColor: COLORS.c1,
+    color: COLORS.white,
     height: '100vh',
     display: 'flex',
     flexDirection: 'column',

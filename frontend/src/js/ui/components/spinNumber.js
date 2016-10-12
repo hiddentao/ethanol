@@ -14,7 +14,7 @@ export default class Component extends React.Component {
   }
   
   componentWillUnmount () {
-    this.unmounted = false;
+    this.unmounted = true;
   }
   
   render () {
