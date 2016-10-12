@@ -6,18 +6,26 @@
 
 Requirements:
   * [Node.js 6+](http://nodejs.org)
+  * [Yarn](yarnpkg.com)
   
 Once Node is installed, install the dependencies:
 
 ```shell
-npm install
+yarn
 ```
 
-To run:
+To build for development (with watcher):
 
 ```shell
 gulp
 ```
+
+To start the app UI:
+
+```shell
+node_modules/.bin/electron .
+```
+
 
 
 ## Contributions

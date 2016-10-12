@@ -51,7 +51,7 @@ _.each tasks, (file, name) ->
   { handler, deps } = constructorFn(paths, options, tasks)
 
   handler or= undefined
-  deps or = []
+  deps or= []
 
   gulp.task name, deps, handler
 

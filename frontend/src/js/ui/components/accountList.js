@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 import Account from './account';
-import { connectRedux } from './helpers/decorators';
+import { connectRedux } from '../helpers/decorators';
 import { css } from 'aphrodisiac';
 import styles from '../styles/components/accountList';
 
@@ -17,10 +17,14 @@ export default class Component extends React.Component {
       <div className={css(styles.main)}>
         {accounts}
         <div className={css(styles.addForm)}>
-          <button>Add acccount</button>
+          <button onClick={this._add.bind(this)}>Add acccount</button>
         </div>
       </div>
     );
+  }
+  
+  _add () {
+    this.props.web3.personal.newAccount('1234');
   }
 }
 

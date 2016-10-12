@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 import { css } from 'aphrodisiac';
-import styles from '../styles/components';
+import styles from '../styles/components/spinNumber';
 
 
 export default class Component extends React.Component {
@@ -13,10 +13,14 @@ export default class Component extends React.Component {
     };
   }
   
+  componentWillUnmount () {
+    this.unmounted = false;
+  }
+  
   render () {
     return (
-      <span className={css(styles.spinNumber)}>
-        {this.state.value}
+      <span className={css(styles.main)}>
+        {this.state.value.toFixed(2)}
       </span>
     );
   }
@@ -27,7 +31,7 @@ export default class Component extends React.Component {
     const newValue = this._round(props.value);
     
     this._updateTimer = setInterval(() => {
-      if (this.state.value !== newValue) {
+      if (!this.unmounted && this.state.value !== newValue) {
         const interimValue = this._round(
           this.state.value + (newValue - this.state.value) / 2
         );
