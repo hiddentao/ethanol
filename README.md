@@ -7,23 +7,23 @@
 Requirements:
   * [Node.js 6+](http://nodejs.org)
   * [Yarn](yarnpkg.com)
-  
+
 Once Node is installed, install the dependencies:
 
 ```shell
-yarn
+$ yarn
 ```
 
 To build for development (with watcher):
 
 ```shell
-gulp
+$ gulp
 ```
 
 To start the app UI:
 
 ```shell
-node_modules/.bin/electron .
+$ npm run electron
 ```
 
 
@@ -48,5 +48,3 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-

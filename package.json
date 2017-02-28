@@ -4,7 +4,8 @@
   "description": "Cross-platform Solidity IDE for Ethereum",
   "main": "main.js",
   "scripts": {
-    "start": "gulp"
+    "start": "gulp",
+    "electron": "electron ."
   },
   "repository": {
     "type": "git",
