@@ -69,11 +69,12 @@
   },
   "dependencies": {
     "bluebird": "^3.4.6",
-    "ethereum-client-binaries": "^1.2.0",
+    "ethereum-client-binaries": "latest",
     "eventemitter3": "^2.0.0",
     "geth-private": "^1.7.0",
     "lodash": "^4.15.0",
     "log4js": "^0.6.38",
+    "web3": "latest",
     "yargs": "^5.0.0"
   },
   "browserify": {
